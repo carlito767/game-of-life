@@ -1,0 +1,11 @@
+{
+    "window.title": "${activeEditorShort} — game-of-life",
+    "search.exclude": {
+        "**/.git": true,
+        "**/node_modules": true,
+        "**/tmp": true,
+        "**/out": true
+    },
+    "haxe.executable": "../../../ceramic/tools/haxe",
+    "haxelib.executable": "../../../ceramic/tools/haxelib"
+}
