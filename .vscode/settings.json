@@ -1,4 +1,19 @@
 {
+    // Common
+    "editor.detectIndentation": false,
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.renderWhitespace": "all",
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
+    "git.followTagsWhenSync": true,
+    "[markdown]": {
+        "files.trimTrailingWhitespace": false
+    },
+    // Ceramic
     "window.title": "${activeEditorShort} — game-of-life",
     "search.exclude": {
         "**/.git": true,

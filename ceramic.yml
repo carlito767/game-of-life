@@ -1,8 +1,8 @@
 app:
-    package: mycompany.game-of-life
+    package: goramod.game-of-life
     name: game-of-life
     displayName: game-of-life
-    author: My Company
+    author: Goramod
     version: '1.0'
 
     plugins:
