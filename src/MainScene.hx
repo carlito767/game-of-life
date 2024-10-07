@@ -1,16 +1,24 @@
 package;
 
+import ceramic.AssetId;
 import ceramic.Scene;
 import ceramic.Tilemap;
 import ceramic.TilemapData;
 import ceramic.TilemapLayerData;
 import ceramic.Tileset;
+import ceramic.Timer;
+import elements.Im;
 
 using PatternTools;
 
 class MainScene extends Scene {
     static final CELLMAP_WIDTH = 80;
     static final CELLMAP_HEIGHT = 60;
+
+    var patternsById:Map<String, AssetId<String>>;
+    var patternId:String;
+    var nextPatternId:String;
+    var sps:Float;
 
     var pattern:Pattern;
     var tilemap:Tilemap;
@@ -20,15 +28,34 @@ class MainScene extends Scene {
         // Add any asset you want to load here
 
         assets.add(Images.SINGLE_TILE);
-        assets.add(Texts.PATTERNS__PULSAR_CELLS);
+
+        // Load patterns
+        // https://conwaylife.com/wiki
+        patternsById = [
+            'Gosper glider gun' => Texts.PATTERNS__GOSPERGLIDERGUN_CELLS,
+            'Pentadecathlon' => Texts.PATTERNS__PENTADECATHLON_CELLS,
+            'Pulsar' => Texts.PATTERNS__PULSAR_CELLS,
+            'Toad sucker' => Texts.PATTERNS__TOADSUCKER_CELLS,
+            'Twin bees shuttle' => Texts.PATTERNS__3BLOCKTWINBEESSHUTTLE_CELLS,
+        ];
+        for (aid in patternsById) {
+            assets.add(aid);
+        }
     }
 
     override function create() {
         // Called when scene has finished preloading
 
-        // Load Pulsar pattern
-        // https://conwaylife.com/wiki/Pulsar
-        var text = assets.text(Texts.PATTERNS__PULSAR_CELLS);
+        // Set default values
+        nextPatternId = 'Pulsar';
+        sps = 4.0;
+
+        // Start simulation
+        nextGeneration();
+    }
+
+    function loadPattern(aid:AssetId<String>) {
+        var text = assets.text(aid);
         pattern = text.convertPlaintextToPattern();
 
         // Fit pattern to cellmap
@@ -47,6 +74,7 @@ class MainScene extends Scene {
             }
         }
         pattern = {w: CELLMAP_WIDTH, h: CELLMAP_HEIGHT, cells: cells};
+        generation = 0;
     }
 
     function createTilemap(p:Pattern) {
@@ -82,12 +110,30 @@ class MainScene extends Scene {
         add(tilemap);
     }
 
-    override function update(delta:Float) {
-        // Here, you can add code that will be executed at every frame
-
+    function nextGeneration() {
+        if (patternId != nextPatternId) {
+            patternId = nextPatternId;
+            var aid = patternsById[patternId];
+            loadPattern(aid);
+        }
         createTilemap(pattern);
         pattern.nextGeneration();
         generation++;
+
+        Timer.delay(null, 1 / sps, nextGeneration);
+    }
+
+    override function update(delta:Float) {
+        // Here, you can add code that will be executed at every frame
+
+        Im.begin('Options', 300);
+
+        var ids = [for (key in patternsById.keys()) key];
+        Im.select('Pattern', Im.string(nextPatternId), ids);
+
+        Im.slideFloat('Steps per second', Im.float(sps), 1, 60, 1);
+
+        Im.end();
     }
 
     override function resize(width:Float, height:Float) {

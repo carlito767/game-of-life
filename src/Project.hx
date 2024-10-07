@@ -14,8 +14,6 @@ class Project extends Entity {
         settings.targetHeight = 480;
         settings.scaling = FIT;
         settings.resizable = true;
-        // low fps for visibility
-        settings.targetFps = 4;
 
         app.onceReady(this, ready);
     }
